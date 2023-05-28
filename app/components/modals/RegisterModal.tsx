@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast'
 import { FcGoogle } from "react-icons/fc"
 import { AiFillGithub } from 'react-icons/ai'
 import { ModalRef } from '@/app/types'
+import { signIn } from 'next-auth/react'
 
 interface RegisterModalProps {
   registerModalRef: RefObject<ModalRef>
@@ -49,16 +50,16 @@ export default function RegisterModal({ registerModalRef }: RegisterModalProps) 
           <InputField id="name" label="Name" disabled={isLoading} errors={errors} required register={register} />
           <InputField id="password" type="password" label="Password" disabled={isLoading} errors={errors} required register={register} />
           <div className="flex flex-row items-center gap-4 w-full mt-6">
-            <Button isLoading={isLoading} variant="outline" onClick={closeModal} type="button">Cencal</Button>
-            <Button type="submit" isLoading={isLoading}>Submit</Button>
+            {/* <Button isLoading={isLoading} variant="outline" onClick={closeModal} type="button">Cencal</Button> */}
+            <Button type="submit" isLoading={isLoading}>Sgin up</Button>
           </div>
           <div className="flex flex-col gap-4 mt-3">
             <hr />
-            <Button type="button" variant="outline" onClick={() => { }}>
+            <Button type="button" variant="outline" onClick={() => signIn("google")}>
               <FcGoogle size={24} />
               Continue with Google
             </Button>
-            <Button type="button" variant="outline" onClick={() => { }}>
+            <Button type="button" variant="outline" onClick={() => signIn("github")}>
               <AiFillGithub size={24} />
               Continue with Github
             </Button>
@@ -69,8 +70,6 @@ export default function RegisterModal({ registerModalRef }: RegisterModalProps) 
           </div>
         </form>
       </div>
-
-
     </Modal>
   )
 }

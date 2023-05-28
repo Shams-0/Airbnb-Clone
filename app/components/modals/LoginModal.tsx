@@ -60,16 +60,16 @@ export default function LoginModal({ loginModalRef }: LoginModalProps) {
           <InputField id="email" label="Email" type="email" disabled={isLoading} errors={errors} required register={register} />
           <InputField id="password" type="password" label="Password" disabled={isLoading} errors={errors} required register={register} />
           <div className="flex flex-row items-center gap-4 w-full mt-6">
-            <Button isLoading={isLoading} variant="outline" onClick={closeModal} type="button">Cencal</Button>
-            <Button type="submit" isLoading={isLoading}>Submit</Button>
+            {/* <Button isLoading={isLoading} variant="outline" onClick={closeModal} type="button">Cencal</Button> */}
+            <Button type="submit" isLoading={isLoading}>Log in</Button>
           </div>
           <div className="flex flex-col gap-4 mt-3">
             <hr />
-            <Button type="button" variant="outline" onClick={() => { }}>
+            <Button type="button" variant="outline" onClick={() => signIn("google")}>
               <FcGoogle size={24} />
               Continue with Google
             </Button>
-            <Button type="button" variant="outline" onClick={() => { }}>
+            <Button type="button" variant="outline" onClick={() => signIn("github")}>
               <AiFillGithub size={24} />
               Continue with Github
             </Button>
