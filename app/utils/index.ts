@@ -5,6 +5,17 @@ import { FaSkiing } from "react-icons/fa"
 import { BsSnow } from "react-icons/bs"
 import { IoDiamond } from "react-icons/io5"
 
+export const RENT_DEFAULT_VALUES = {
+  category: "",
+  location: null,
+  guestCount: 1,
+  roomCount: 1,
+  bathRoomCount: 1,
+  imageSrc: "",
+  price: 1,
+  title: "",
+  description: ""
+}
 
 export const categories = [
   {

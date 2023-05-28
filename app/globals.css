@@ -7,3 +7,31 @@ body,
 :root {
 	height: 100%;
 }
+
+/* width */
+#scrollbar::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+	border-radius: 10px;
+}
+
+/* Track */
+#scrollbar::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+#scrollbar::-webkit-scrollbar-thumb {
+	background: rgb(244, 63, 94);
+}
+
+#react-select-2-listbox {
+	z-index: 999;
+}
+
+.leafleft-bottom,
+.leafleft-center,
+.leafleft-pane,
+.leafleft-top {
+	z-index: 0 !important;
+}
