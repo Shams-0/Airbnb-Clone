@@ -1,47 +1,52 @@
-import { RefObject, useImperativeHandle, useState } from 'react'
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form"
+"use client"
+
+import { signIn } from 'next-auth/react'
+import { useCallback, useState } from 'react'
+
 import axios from "axios"
-import Button from '../Button'
-import Modal from './Modal'
-import InputField from '../inputs/InputField'
 import { toast } from 'react-hot-toast'
 import { FcGoogle } from "react-icons/fc"
 import { AiFillGithub } from 'react-icons/ai'
-import { ModalRef } from '@/app/types'
-import { signIn } from 'next-auth/react'
+import { useForm, FieldValues, SubmitHandler } from "react-hook-form"
 
-interface RegisterModalProps {
-  registerModalRef: RefObject<ModalRef>
-}
+import Modal from './Modal'
+import Button from '@components/Button'
+import InputField from '@inputs/InputField'
+import useLoginModal from '@hooks/useLoginModal'
+import useRegisterModal from '@hooks/useRegisterModal'
+
 const DEFAULT_VALUES = { name: "", email: "", password: "" }
 
-export default function RegisterModal({ registerModalRef }: RegisterModalProps) {
+const RegisterModal = () => {
 
-  let [isOpen, setIsOpen] = useState(false)
+  const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FieldValues>({ defaultValues: DEFAULT_VALUES })
-
-  useImperativeHandle(registerModalRef, () => ({
-    isOpen: (value: boolean) => setIsOpen(value)
-  }))
-
-  const closeModal = () => {
-    setIsOpen(false)
-    reset();
-  }
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true)
     console.log(data);
 
     axios.post("/api/register", data)
-      .then(() => setIsOpen(false))
+      .then(() => registerModal.onClose())
       .catch((err) => toast.error("Something Went Wrong!"))
       .finally(() => setIsLoading(false))
   }
 
+  const closeModal = () => {
+    registerModal.onClose()
+    reset();
+  }
+
+  const onToggle = useCallback(() => {
+    registerModal.onClose();
+    loginModal.onOpen();
+  }, [registerModal, loginModal])
+
+
   return (
-    <Modal closeModal={closeModal} title="Register" isOpen={isOpen}>
+    <Modal closeModal={closeModal} title="Airbnb your home!" isOpen={registerModal.isOpen}>
       <div className="relative p-6">
         <h4 className="text-2xl font-bold">Welcome to Airbnb</h4>
         <p className="font-light text-neutral-500 mt-2 mb-4">Create an account!</p>
@@ -66,10 +71,12 @@ export default function RegisterModal({ registerModalRef }: RegisterModalProps) 
           </div>
           <div className="flex gap-2 justify-center mt-4">
             <p className="font-light text-neutral-500">Alread have account?</p>
-            <div className="text-neutral-800 cursor-pointer hover:underline"> Log in</div>
+            <div className="text-neutral-800 cursor-pointer hover:underline" onClick={onToggle}>Log in</div>
           </div>
         </form>
       </div>
     </Modal>
   )
 }
+
+export default RegisterModal

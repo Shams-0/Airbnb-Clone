@@ -1,37 +1,31 @@
-import { RefObject, useImperativeHandle, useState } from 'react'
-import { useForm, FieldValues, SubmitHandler } from "react-hook-form"
-import axios from "axios"
-import Button from '../Button'
-import Modal from './Modal'
-import InputField from '../inputs/InputField'
+"use client"
+
+import { signIn } from "next-auth/react"
+import { useRouter } from 'next/navigation'
+import { useCallback, useState } from 'react'
+
 import { toast } from 'react-hot-toast'
 import { FcGoogle } from "react-icons/fc"
 import { AiFillGithub } from 'react-icons/ai'
-import { signIn } from "next-auth/react"
-import { useRouter } from 'next/navigation'
+import { useForm, FieldValues, SubmitHandler } from "react-hook-form"
 
-import { ModalRef } from '@/app/types'
 
-interface LoginModalProps {
-  loginModalRef: RefObject<ModalRef>
-}
+import Modal from './Modal'
+import Button from '@components/Button'
+import InputField from '@inputs/InputField'
+import useLoginModal from "@hooks/useLoginModal"
+import useRegisterModal from "@hooks/useRegisterModal"
+
+
 const DEFAULT_VALUES = { email: "", password: "" }
 
-export default function LoginModal({ loginModalRef }: LoginModalProps) {
+const LoginModal = () => {
 
-  let [isOpen, setIsOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter();
+  const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
+  const [isLoading, setIsLoading] = useState(false)
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FieldValues>({ defaultValues: DEFAULT_VALUES })
-
-  useImperativeHandle(loginModalRef, () => ({
-    isOpen: (value: boolean) => setIsOpen(value)
-  }))
-
-  const closeModal = () => {
-    setIsOpen(false)
-    reset();
-  }
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true)
@@ -51,8 +45,19 @@ export default function LoginModal({ loginModalRef }: LoginModalProps) {
 
   }
 
+  const closeModal = () => {
+    loginModal.onClose()
+    reset();
+  }
+
+  const onToggle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [registerModal, loginModal])
+
+
   return (
-    <Modal closeModal={closeModal} title="Login" isOpen={isOpen}>
+    <Modal closeModal={closeModal} title="Login" isOpen={loginModal.isOpen}>
       <div className="relative p-6">
         <h4 className="text-2xl font-bold">Welcome back!</h4>
         <p className="font-light text-neutral-500 mt-2 mb-4">Login to your account!</p>
@@ -75,8 +80,8 @@ export default function LoginModal({ loginModalRef }: LoginModalProps) {
             </Button>
           </div>
           <div className="flex gap-2 justify-center mt-4">
-            <p className="font-light text-neutral-500">Alread have account?</p>
-            <div className="text-neutral-800 cursor-pointer hover:underline"> Log in</div>
+            <p className="font-light text-neutral-500">First time using Airbnb?</p>
+            <div className="text-neutral-800 cursor-pointer hover:underline" onClick={onToggle}>Create an account</div>
           </div>
         </form>
       </div>
@@ -85,3 +90,5 @@ export default function LoginModal({ loginModalRef }: LoginModalProps) {
     </Modal>
   )
 }
+
+export default LoginModal

@@ -1,16 +1,20 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { Menu } from '@headlessui/react'
 import { User } from "@prisma/client";
 import { AiOutlineMenu } from "react-icons/ai"
 import { signOut } from "next-auth/react"
 
-import Avatar from "../Avatar";
-import RegisterModal from "../modals/RegisterModal";
-import LoginModal from "../modals/LoginModal";
 import MenuItem from "./MenuItem";
-import { ModalRef } from "@/app/types";
+import Avatar from "@components/Avatar";
+import RentModal from "@modals/RentModal";
+import LoginModal from "@modals/LoginModal";
+import RegisterModal from "@modals/RegisterModal";
+import useRegisterModal from '@hooks/useRegisterModal'
+import useLoginModal from "@hooks/useLoginModal";
+import useRentModal from "@hooks/useRentModal";
+
 
 interface UserMenuProps {
   currentUser?: User | null
@@ -18,21 +22,23 @@ interface UserMenuProps {
 
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
-  const registerModalRef = useRef<ModalRef>(null);
-  const loginModalRef = useRef<ModalRef>(null);
+  const rentModal = useRentModal();
+  const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
 
-  const openRegisterModal = () => {
-    registerModalRef.current?.isOpen(true)
-  }
-  const openLoginModal = () => {
-    loginModalRef.current?.isOpen(true)
-  }
+  const onRent = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen()
+    }
+    // Open Rent Modal
+    rentModal.onOpen()
+  }, [currentUser, loginModal, rentModal])
 
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <div
-          onClick={() => { }}
+          onClick={onRent}
           className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
           Airbnb your home
         </div>
@@ -51,22 +57,23 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   <MenuItem onClick={() => { }} label="My favorites" />
                   <MenuItem onClick={() => { }} label="My reservations" />
                   <MenuItem onClick={() => { }} label="My properties" />
-                  <MenuItem onClick={() => { }} label="Airbnb my home" />
+                  <MenuItem onClick={rentModal.onOpen} label="Airbnb my home" />
                   <hr />
                   <MenuItem onClick={() => signOut()} label="Log out" />
                 </>
               ) : (
                 <>
-                  <MenuItem onClick={openLoginModal} label="Login" />
-                  <MenuItem onClick={openRegisterModal} label="Sign up" />
+                  <MenuItem onClick={loginModal.onOpen} label="Login" />
+                  <MenuItem onClick={registerModal.onOpen} label="Sign up" />
                 </>
               )
             }
 
           </Menu.Items>
         </Menu>
-        <LoginModal loginModalRef={loginModalRef} />
-        <RegisterModal registerModalRef={registerModalRef} />
+        <LoginModal />
+        <RegisterModal />
+        <RentModal />
       </div>
     </div>
   )

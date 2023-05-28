@@ -1,12 +1,13 @@
 "use client"
 
-import { User } from '@prisma/client'
 import React from 'react'
+import { User } from '@prisma/client'
 
-import Container from '../Container'
 import Logo from './Logo'
 import Search from './Search'
 import UserMenu from './UserMenu'
+import Categories from './Categories'
+import Container from '@components/Container'
 
 interface HeaderProps {
   currentUser?: User | null
@@ -24,6 +25,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
           </div>
         </Container>
       </div>
+      <Categories />
     </header>
   )
 }

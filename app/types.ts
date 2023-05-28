@@ -1,3 +1,5 @@
-export interface ModalRef {
-  isOpen: (value: boolean) => void
+export interface ModalStore {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
 }

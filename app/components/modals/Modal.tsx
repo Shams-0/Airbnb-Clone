@@ -1,6 +1,8 @@
+"use client"
+
 import React, { Fragment } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import { MdClose } from 'react-icons/md'
+import { Dialog, Transition } from '@headlessui/react'
 
 interface ModalProps {
   children: React.ReactNode

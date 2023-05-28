@@ -1,7 +1,9 @@
-import './globals.css'
 import { Nunito } from 'next/font/google'
-import Header from './components/Header/Header'
+
 import { Toaster } from 'react-hot-toast';
+
+import './globals.css'
+import Header from './components/Header/Header'
 import getCurrentUser from './actions/getCurrentUser';
 
 const font = Nunito({ subsets: ['latin'] });
