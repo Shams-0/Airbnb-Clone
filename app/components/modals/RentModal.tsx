@@ -1,11 +1,8 @@
 "use client"
 
-import { signIn } from 'next-auth/react'
 import { useMemo, useState } from 'react'
 
 import { toast } from 'react-hot-toast'
-import { FcGoogle } from "react-icons/fc"
-import { AiFillGithub } from 'react-icons/ai'
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form"
 
 import Modal from './Modal'
@@ -16,7 +13,6 @@ import { RENT_DEFAULT_VALUES, categories } from '@utils/index'
 import CategoryInput from '@inputs/CategoryInput'
 import CountrySelect from '@inputs/CountrySelect'
 import dynamic from 'next/dynamic'
-import Map from '@components/Map'
 
 enum STEPS {
   CATEGORY = 0,
